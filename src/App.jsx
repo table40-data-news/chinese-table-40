@@ -488,6 +488,16 @@ function MusicToggle() {
   );
 }
 
+function PageBackdrop() {
+  return (
+    <div className="page-backdrop" aria-hidden="true">
+      <img className="page-backdrop__image page-backdrop__image--main" src={assetPath("/assets/table40-hero-v2.png")} alt="" />
+      <img className="page-backdrop__image page-backdrop__image--left" src={assetPath("/assets/eras/era-1980.png")} alt="" />
+      <img className="page-backdrop__image page-backdrop__image--right" src={assetPath("/assets/eras/era-2026.png")} alt="" />
+    </div>
+  );
+}
+
 function WarmDataStory({ year, selectedMetric }) {
   const metric = metrics[selectedMetric];
   const mood = getYearMood(year);
@@ -1426,6 +1436,7 @@ export function App() {
 
   return (
     <>
+      <PageBackdrop />
       <div className="progress-bar" aria-hidden="true" />
       <header
         className="hero"

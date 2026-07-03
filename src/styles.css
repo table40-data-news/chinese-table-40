@@ -28,18 +28,18 @@ html {
   background: var(--paper);
 }
 
+#root {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   color: var(--ink);
-  background:
-    linear-gradient(135deg, rgba(255, 252, 244, 0.92) 0%, rgba(249, 239, 220, 0.82) 42%, rgba(238, 229, 206, 0.9) 100%),
-    repeating-linear-gradient(115deg, rgba(184, 61, 46, 0.035) 0 1px, transparent 1px 22px),
-    linear-gradient(90deg, rgba(82, 67, 42, 0.045) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(82, 67, 42, 0.035) 1px, transparent 1px),
-    var(--paper);
-  background-size: 56px 56px;
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0;
   overflow-x: hidden;
@@ -52,9 +52,83 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 253, 248, 0.52), rgba(255, 253, 248, 0)),
-    repeating-linear-gradient(0deg, rgba(118, 91, 48, 0.035) 0 1px, transparent 1px 11px);
-  opacity: 0.78;
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.88), transparent 28%),
+    radial-gradient(circle at 86% 28%, rgba(214, 184, 107, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.72), rgba(251, 246, 234, 0.18));
+  opacity: 0.72;
+}
+
+.page-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.96), transparent 32%),
+    linear-gradient(135deg, #fffaf0 0%, #f6ead6 46%, #f1e1c7 100%);
+}
+
+.page-backdrop::before,
+.page-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.page-backdrop::before {
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(255, 253, 248, 0.96) 0%, rgba(255, 253, 248, 0.72) 42%, rgba(255, 253, 248, 0.48) 100%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.78), rgba(251, 246, 234, 0.9) 62%, rgba(251, 246, 234, 0.98));
+}
+
+.page-backdrop::after {
+  z-index: 3;
+  background:
+    radial-gradient(ellipse at 28% 20%, rgba(255, 255, 255, 0.7), transparent 34%),
+    radial-gradient(ellipse at 76% 78%, rgba(184, 61, 46, 0.08), transparent 30%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0), rgba(255, 253, 248, 0.86));
+  mix-blend-mode: screen;
+}
+
+.page-backdrop__image {
+  position: absolute;
+  display: block;
+  object-fit: cover;
+  filter: saturate(0.88) contrast(0.98);
+}
+
+.page-backdrop__image--main {
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.28;
+  transform: scale(1.04);
+}
+
+.page-backdrop__image--left,
+.page-backdrop__image--right {
+  z-index: 2;
+  width: min(42vw, 560px);
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  opacity: 0.14;
+  box-shadow: 0 28px 80px rgba(66, 54, 35, 0.12);
+  transform: rotate(-3deg);
+}
+
+.page-backdrop__image--left {
+  left: -9vw;
+  top: 34vh;
+}
+
+.page-backdrop__image--right {
+  right: -7vw;
+  top: 56vh;
+  transform: rotate(3deg);
 }
 
 button,
@@ -107,9 +181,9 @@ a {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(184, 61, 46, 0.05)),
-    repeating-linear-gradient(90deg, rgba(255, 253, 248, 0.16) 0 1px, transparent 1px 18px);
-  opacity: 0.7;
+    radial-gradient(ellipse at 70% 24%, rgba(255, 255, 255, 0.22), transparent 36%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(184, 61, 46, 0.05));
+  opacity: 0.78;
 }
 
 .hero::after {
