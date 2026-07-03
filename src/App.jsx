@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 function assetPath(path) {
   return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
@@ -180,6 +180,55 @@ const sourceNotes = [
   "刘铁柱为化名和合成人物线索，用来串联普通家庭餐桌记忆，不代表单一真实受访者。",
 ];
 
+const yearMoods = [
+  {
+    year: 1985,
+    title: "饭香先从锅盖缝里冒出来",
+    text: "那时的数字不大，却很有重量。每多一点肉、多一把青菜，都像日子往前挪了一小步。",
+    whisper: "刘铁柱记得，母亲掀开锅盖前，全家人都会安静一下。",
+  },
+  {
+    year: 1995,
+    title: "菜市场把颜色带回家",
+    text: "摊位、杆秤、塑料袋和新鲜水果，让餐桌开始从“够吃”转向“想吃”。",
+    whisper: "他第一次觉得，买菜也能像逛街一样有盼头。",
+  },
+  {
+    year: 2010,
+    title: "选择变多，晚饭也变忙",
+    text: "肉、奶、水产和水果一起增长，餐桌更丰盛；但城市节奏也把一家人坐下的时间切得更碎。",
+    whisper: "饭菜多了，等人的时间也多了。",
+  },
+  {
+    year: 2015,
+    title: "手机开始参与一顿饭",
+    text: "外卖的曲线突然抬头，晚饭不再只发生在厨房，也发生在屏幕、商家和街道之间。",
+    whisper: "门铃响起时，热饭像从城市深处赶来。",
+  },
+  {
+    year: 2026,
+    title: "好好吃饭，变成新的家庭语言",
+    text: "餐桌继续变丰富，也更在意健康、效率和陪伴。数据的终点不是数字，而是每天怎样照顾自己和家人。",
+    whisper: "他会看配料表，也仍会把好吃的先夹给孩子。",
+  },
+];
+
+const metricHumanNotes = {
+  grain: "主食退潮，不是米面消失，而是它终于不用独自承担一顿饭的全部重量。",
+  meat: "肉类上升，背后是收入、冷链和市场共同托起的日常满足。",
+  vegetable: "蔬菜看似平稳，却最像家的底色：便宜、鲜活、每天都要有。",
+  fruit: "水果从礼物变成日常，是餐桌审美和健康意识一起变轻盈的证据。",
+  dairy: "奶类的曲线像一条营养观念的曲线，从稀罕到寻常，从孩子到老人。",
+  aquatic: "水产连接江河海，也连接冷链、物流和地方口味。",
+  takeout: "外卖不是偷懒的注脚，而是城市时间被重新分配之后的一种答案。",
+};
+
+function getYearMood(year) {
+  return yearMoods.reduce((best, item) => (
+    Math.abs(item.year - year) < Math.abs(best.year - year) ? item : best
+  ), yearMoods[0]);
+}
+
 const provinceFields = [
   { key: "粮食", label: "主食", color: palette.grain },
   { key: "猪肉", label: "猪肉", color: palette.meat },
@@ -321,6 +370,158 @@ function HeroCard({ metricKey }) {
       </div>
       <div className={isUp ? "delta delta--up" : "delta delta--down"}>{deltaLabel}</div>
     </article>
+  );
+}
+
+function MusicToggle() {
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (!playing) {
+      audioRef.current?.stop?.();
+      audioRef.current = null;
+      return undefined;
+    }
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) {
+      setPlaying(false);
+      return undefined;
+    }
+
+    const context = new AudioContext();
+    const master = context.createGain();
+    const delay = context.createDelay();
+    const feedback = context.createGain();
+    const filter = context.createBiquadFilter();
+    const notes = [196, 246.94, 293.66, 329.63, 392, 493.88, 440, 329.63];
+    let step = 0;
+
+    master.gain.value = 0.035;
+    delay.delayTime.value = 0.42;
+    feedback.gain.value = 0.24;
+    filter.type = "lowpass";
+    filter.frequency.value = 1600;
+
+    master.connect(filter);
+    filter.connect(context.destination);
+    master.connect(delay);
+    delay.connect(feedback);
+    feedback.connect(delay);
+    delay.connect(filter);
+
+    const padGain = context.createGain();
+    padGain.gain.value = 0.012;
+    padGain.connect(master);
+    const pad = [98, 146.83, 196].map((frequency, index) => {
+      const oscillator = context.createOscillator();
+      oscillator.type = index === 1 ? "triangle" : "sine";
+      oscillator.frequency.value = frequency;
+      oscillator.connect(padGain);
+      oscillator.start();
+      return oscillator;
+    });
+
+    const playTone = (frequency, startTime) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, startTime);
+      gain.gain.setValueAtTime(0.0001, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.045, startTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.45);
+      oscillator.connect(gain);
+      gain.connect(master);
+      oscillator.start(startTime);
+      oscillator.stop(startTime + 1.55);
+    };
+
+    const schedule = () => {
+      const now = context.currentTime + 0.08;
+      for (let index = 0; index < 4; index += 1) {
+        const frequency = notes[(step + index) % notes.length];
+        playTone(frequency, now + index * 0.72);
+      }
+      step = (step + 2) % notes.length;
+    };
+
+    schedule();
+    const timer = window.setInterval(schedule, 2880);
+
+    let stopped = false;
+    const stopAudio = () => {
+      if (stopped) return;
+      stopped = true;
+      window.clearInterval(timer);
+      pad.forEach((oscillator) => {
+        try {
+          oscillator.stop();
+        } catch {
+          // Oscillators may already be stopped when React re-runs the effect.
+        }
+      });
+      context.close();
+    };
+    audioRef.current = { stop: stopAudio };
+
+    return stopAudio;
+  }, [playing]);
+
+  return (
+    <button
+      className={playing ? "music-toggle music-toggle--playing" : "music-toggle"}
+      type="button"
+      aria-pressed={playing}
+      onClick={() => setPlaying((value) => !value)}
+    >
+      <span className="music-toggle__bars" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
+      <span>
+        <strong>{playing ? "背景音乐开" : "背景音乐关"}</strong>
+        <em>轻柔餐桌氛围</em>
+      </span>
+    </button>
+  );
+}
+
+function WarmDataStory({ year, selectedMetric }) {
+  const metric = metrics[selectedMetric];
+  const mood = getYearMood(year);
+  const current = getMetricValue(selectedMetric, year);
+  const latest = getMetricValue(selectedMetric, 2026);
+  const baseYear = metric.values[1985] === 0 ? 2015 : (metric.values[1985] ? 1985 : 1990);
+  const base = metric.values[baseYear];
+  const ratio = base ? Math.min(100, Math.abs((current - base) / base) * 70 + 18) : 82;
+
+  return (
+    <section className="warm-story" aria-label="数据叙事便签">
+      <article className="warm-story__lead">
+        <span className="eyebrow">这一年的饭桌旁白</span>
+        <h3>{mood.title}</h3>
+        <p>{mood.text}</p>
+        <blockquote>{mood.whisper}</blockquote>
+      </article>
+      <article className="warm-story__metric" style={{ "--accent": metric.color, "--fill": `${ratio}%` }}>
+        <span>{metric.label}</span>
+        <strong>{formatNumber(current)}</strong>
+        <em>{metric.unit}</em>
+        <p>{metricHumanNotes[selectedMetric]}</p>
+        <div className="warm-story__bar" aria-hidden="true"><i /></div>
+      </article>
+      <article className="warm-story__ledger">
+        <span>从{baseYear}到2026</span>
+        <div>
+          <strong>{formatNumber(base)}</strong>
+          <i />
+          <strong>{formatNumber(latest)}</strong>
+        </div>
+        <p>数字的变化不是一根冷线，而是购物袋、冰箱、手机订单和家人饭碗一起改变的结果。</p>
+      </article>
+    </section>
   );
 }
 
@@ -605,6 +806,7 @@ function MatrixHeatmap({ provinceData }) {
                     title={`${province.province} ${row.label}: ${provinceValue(province, row.key).toFixed(1)}`}
                     style={{
                       background: `color-mix(in srgb, ${row.color} ${Math.max(18, ratio * 100)}%, #fffdf8)`,
+                      "--delay": `${Math.round(ratio * 260)}ms`,
                     }}
                   />
                 );
@@ -632,14 +834,26 @@ function RankingBars({ provinceData, field }) {
       </div>
       <div className="ranking-bars" aria-label={`${field}省份排名`}>
         {rows.map((item, index) => (
-          <div className="ranking-row" key={item.province}>
+          <div
+            className="ranking-row"
+            key={item.province}
+            style={{
+              "--bar": `${(provinceValue(item, field) / max) * 100}%`,
+              "--delay": `${index * 55}ms`,
+            }}
+          >
             <span>{index + 1}</span>
             <strong>{item.province}</strong>
-            <i style={{ width: `${(provinceValue(item, field) / max) * 100}%` }} />
+            <i />
             <em>{provinceValue(item, field).toFixed(1)}</em>
           </div>
         ))}
       </div>
+      {rows[0] && (
+        <p className="chart-card__note">
+          {rows[0].province}排在最前面。这样的排名不是胜负，而是气候、物产、城市化和地方口味共同写下的一行脚注。
+        </p>
+      )}
     </article>
   );
 }
@@ -1087,7 +1301,12 @@ function ProvinceCompareBars({ province, provinceData }) {
             </div>
             <span className="compare-track">
               <i className="compare-bar__avg" style={{ left: `${(avg / max) * 100}%` }} />
-              <b style={{ width: `${(local / max) * 100}%`, background: field.color }} />
+              <b
+                style={{
+                  "--bar": `${(local / max) * 100}%`,
+                  background: field.color,
+                }}
+              />
             </span>
           </div>
         );
@@ -1276,6 +1495,7 @@ export function App() {
               <PlateTheatre year={year} />
               <TrendPanel selectedMetric={selectedMetric} year={year} />
             </div>
+            <WarmDataStory year={year} selectedMetric={selectedMetric} />
             <div className="stat-row">
               {[
                 ["恩格尔系数", "52.2% → 约29%", "从吃饭占大头，到生活选择更多"],
@@ -1359,6 +1579,7 @@ export function App() {
         </section>
       </main>
 
+      <MusicToggle />
       <SourceDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </>
   );
