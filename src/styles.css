@@ -80,8 +80,8 @@ body::before {
 .page-backdrop::before {
   z-index: 2;
   background:
-    linear-gradient(90deg, rgba(255, 253, 248, 0.96) 0%, rgba(255, 253, 248, 0.72) 42%, rgba(255, 253, 248, 0.48) 100%),
-    linear-gradient(180deg, rgba(255, 253, 248, 0.78), rgba(251, 246, 234, 0.9) 62%, rgba(251, 246, 234, 0.98));
+    linear-gradient(90deg, rgba(255, 253, 248, 0.94) 0%, rgba(255, 253, 248, 0.62) 42%, rgba(255, 253, 248, 0.34) 100%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.68), rgba(251, 246, 234, 0.82) 62%, rgba(251, 246, 234, 0.94));
 }
 
 .page-backdrop::after {
@@ -105,7 +105,7 @@ body::before {
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.28;
+  opacity: 0.34;
   transform: scale(1.04);
 }
 
@@ -170,7 +170,7 @@ a {
   min-height: 94vh;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(251, 246, 234, 0.98) 0%, rgba(251, 246, 234, 0.86) 38%, rgba(251, 246, 234, 0.32) 72%, rgba(251, 246, 234, 0.08) 100%),
+    linear-gradient(90deg, rgba(251, 246, 234, 0.98) 0%, rgba(251, 246, 234, 0.82) 38%, rgba(251, 246, 234, 0.18) 72%, rgba(251, 246, 234, 0.03) 100%),
     var(--hero-image) right center / cover no-repeat;
   border-bottom: 1px solid rgba(53, 55, 47, 0.16);
 }
@@ -183,7 +183,7 @@ a {
   background:
     radial-gradient(ellipse at 70% 24%, rgba(255, 255, 255, 0.22), transparent 36%),
     linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(184, 61, 46, 0.05));
-  opacity: 0.78;
+  opacity: 0.58;
 }
 
 .hero::after {
