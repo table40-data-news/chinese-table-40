@@ -914,6 +914,51 @@ function SlopeChart() {
   const min = Math.min(...values);
   const max = Math.max(...values);
   const y = (value) => 230 - ((value - min) / (max - min || 1)) * 190;
+  const distributeLabels = (items, valueKey) => {
+    const minY = 36;
+    const maxY = 224;
+    const minGap = 22;
+    const sorted = items
+      .map((row) => ({ key: row.key, rawY: y(row[valueKey]) }))
+      .sort((a, b) => a.rawY - b.rawY);
+    const placed = [];
+    sorted.forEach((item, index) => {
+      const previousY = index === 0 ? minY - minGap : placed[index - 1].labelY;
+      placed.push({
+        ...item,
+        labelY: Math.max(minY, Math.min(maxY, item.rawY), previousY + minGap),
+      });
+    });
+
+    const overflow = placed[placed.length - 1].labelY - maxY;
+    if (overflow > 0) {
+      placed.forEach((item) => {
+        item.labelY -= overflow;
+      });
+    }
+    const underflow = minY - placed[0].labelY;
+    if (underflow > 0) {
+      placed.forEach((item) => {
+        item.labelY += underflow;
+      });
+    }
+    placed[placed.length - 1].labelY = Math.min(maxY, placed[placed.length - 1].labelY);
+    for (let index = placed.length - 2; index >= 0; index -= 1) {
+      placed[index].labelY = Math.min(placed[index].labelY, placed[index + 1].labelY - minGap);
+    }
+    placed[0].labelY = Math.max(minY, placed[0].labelY);
+    for (let index = 1; index < placed.length; index += 1) {
+      placed[index].labelY = Math.max(placed[index].labelY, placed[index - 1].labelY + minGap);
+    }
+
+    const labelMap = {};
+    placed.forEach((item) => {
+      labelMap[item.key] = item.labelY;
+    });
+    return labelMap;
+  };
+  const startLabelY = distributeLabels(rows, "start");
+  const endLabelY = distributeLabels(rows, "end");
 
   return (
     <ChartFrame id="slope" className="chart-card--slope">
@@ -935,10 +980,24 @@ function SlopeChart() {
               strokeLinecap="round"
               style={{ "--delay": `${index * 110}ms` }}
             />
+            <line
+              className="slope-label-guide"
+              x1="56"
+              y1={startLabelY[row.key]}
+              x2="82"
+              y2={y(row.start)}
+            />
+            <line
+              className="slope-label-guide"
+              x1="278"
+              y1={y(row.end)}
+              x2="292"
+              y2={endLabelY[row.key]}
+            />
             <circle cx="86" cy={y(row.start)} r="4" fill={row.color} />
             <circle cx="274" cy={y(row.end)} r="4" fill={row.color} />
-            <text x="12" y={y(row.start) + 4}>{row.label}</text>
-            <text x="292" y={y(row.end) + 4}>{formatNumber(row.end)}</text>
+            <text className="slope-label slope-label--left" x="12" y={startLabelY[row.key]} dominantBaseline="middle">{row.label}</text>
+            <text className="slope-label slope-label--right" x="294" y={endLabelY[row.key]} dominantBaseline="middle">{formatNumber(row.end)}</text>
           </g>
         ))}
       </svg>

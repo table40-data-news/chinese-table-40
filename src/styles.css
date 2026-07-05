@@ -1553,6 +1553,23 @@ main {
   font-weight: 800;
 }
 
+.slope-label {
+  paint-order: stroke;
+  stroke: rgba(255, 253, 248, 0.92);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.slope-label--right {
+  font-variant-numeric: tabular-nums;
+}
+
+.slope-label-guide {
+  stroke: rgba(53, 55, 47, 0.18);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
 .sparkline polyline,
 .slope-line,
 .mini-chart__line,
