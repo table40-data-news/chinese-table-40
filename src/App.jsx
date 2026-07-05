@@ -223,6 +223,118 @@ const metricHumanNotes = {
   takeout: "外卖不是偷懒的注脚，而是城市时间被重新分配之后的一种答案。",
 };
 
+const urbanRuralScenes = {
+  rural: {
+    label: "农村镜头",
+    title: "粮袋、菜园和集市，先撑住一家人的底气",
+    image: "/assets/eras/era-1985.png",
+    material: "1980年代：粮袋、票证、杆秤与集市",
+    quote: "“那时候买肉要盘算，菜从地里来，饭一定要够。”",
+    text: "农村餐桌的变化更像一条慢线：主食基底稳，蔬菜和本地物产仍是底色；肉、奶、果一点点加入，营养结构才被重新打开。",
+    stats: [
+      ["主食基底", "更稳"],
+      ["本地物产", "更近"],
+      ["变化节奏", "渐进"],
+    ],
+  },
+  urban: {
+    label: "城市镜头",
+    title: "超市、外卖和营养面板，把晚饭接入城市系统",
+    image: "/assets/eras/era-2026.png",
+    material: "2026年：健康管理、外卖、冷链与个性化选择",
+    quote: "“下班路上先点饭，回家再看配料表。”",
+    text: "城镇餐桌更早接触超市、冷链、外食和外卖。食物选择变多，时间也被压缩，一顿饭开始由厨房、平台、骑手和健康观念共同完成。",
+    stats: [
+      ["消费半径", "更远"],
+      ["时间压力", "更快"],
+      ["健康意识", "更强"],
+    ],
+  },
+};
+
+const chartNarratives = {
+  river: {
+    kicker: "01 结构河流图",
+    title: "餐桌像一条河，主食变窄，奶果变宽",
+    quote: "“以前一顿饭先看饭够不够，现在先问今天想吃什么。”",
+    lede: "把每一年压成一根餐桌柱，能看见比例如何移动：主食退到一旁，肉、奶、水产和水果慢慢挤进日常。",
+    action: "点击年份柱，让上方时间轴与人物线索同步移动。",
+    color: palette.grain,
+  },
+  slope: {
+    kicker: "02 坡度对比图",
+    title: "一升一降，四十年最直观",
+    quote: "“主食退了一步，不是消失，是终于不用独自负责填饱。”",
+    lede: "坡度图只保留起点和终点，让结构性的变化更锋利：谁在退，谁在上，谁改变了一代人的口味。",
+    action: "看线条斜率，而不是只看终点数值。",
+    color: palette.meat,
+  },
+  takeout: {
+    kicker: "03 外卖路径图",
+    title: "晚饭从厨房分流到城市系统",
+    quote: "“门铃响起时，热饭像从城市深处赶来。”",
+    lede: "外卖不是一个孤立数字，而是一条路径：下单、备餐、骑手、签收。它把餐桌放进城市的时间网络。",
+    action: "节点会按市场规模呼吸，越往后越能看见系统变大。",
+    color: palette.takeout,
+  },
+  matrix: {
+    kicker: "04 热力矩阵",
+    title: "横看省份，纵看食物，地方差异会浮出来",
+    quote: "“同一个数字，落到不同省份，就有了口音。”",
+    lede: "热力矩阵不画地图，却能显示地域性：主食、水产、奶果和丰富度在不同地方呈现出不同强弱。",
+    action: "横向扫省份，纵向比较食物。",
+    color: palette.aquatic,
+  },
+  ranking: {
+    kicker: "05 排名条形图",
+    title: "排名不是胜负，是风土和习惯的形状",
+    quote: "“第一名不是冠军，只是一个地方把生活吃成了自己的样子。”",
+    lede: "条形图用来回答一个简单问题：当前所选指标，在2024年的哪些地方最突出。",
+    action: "切换上方指标，排名会跟着换。",
+    color: palette.gold,
+  },
+  scatter: {
+    kicker: "06 气泡散点图",
+    title: "水果、水产与丰富度的关系",
+    quote: "“南北、海陆、城市化，都被藏进一颗气泡里。”",
+    lede: "散点图把水果与水产放在两条轴上，再用气泡大小呈现餐桌丰富度，帮助读者发现省份之间的聚散。",
+    action: "看远离原点的地方，也看气泡大小。",
+    color: palette.fruit,
+  },
+  barcode: {
+    kicker: "07 时间条码",
+    title: "每一年都是一道窄窄的光",
+    quote: "“把年份排在一起，时代的节奏就不再抽象。”",
+    lede: "条码图把一个指标拆成九个年份切片，适合观察阶段性加速、停顿和回落。",
+    action: "切换指标，条码会换成另一种年代指纹。",
+    color: palette.dairy,
+  },
+  multiples: {
+    kicker: "08 小多图",
+    title: "七种指标，七种不同命运",
+    quote: "“把七条线摆在一起，餐桌的节奏感才出来。”",
+    lede: "小多图让读者同时比较多个指标：主食退潮、外卖跃升、水产和奶类缓慢抬头，彼此不再孤立。",
+    action: "点击小图，可把它设为全文当前指标。",
+    color: palette.aquatic,
+  },
+  dumbbell: {
+    kicker: "09 哑铃图",
+    title: "起点和终点之间，谁变化最大",
+    quote: "“一头是旧日子的分量，一头是今天的选择。”",
+    lede: "不同指标单位差异大，哑铃图按各自起终点归一化，更适合比较变化方向和拉伸幅度。",
+    action: "点击任一行，联动主指标。",
+    color: palette.meat,
+  },
+  mosaic: {
+    kicker: "10 餐盘马赛克",
+    title: "一年被切成很多小格，才像一顿真正的饭",
+    quote: "“一顿饭不是一个数字，是很多小块拼在一起。”",
+    lede: "马赛克把年份结构转成视觉拼贴，让读者用面积感受餐盘里的主次关系。",
+    action: "拖动年份，马赛克会重组。",
+    color: palette.vegetable,
+  },
+};
+
 function getYearMood(year) {
   return yearMoods.reduce((best, item) => (
     Math.abs(item.year - year) < Math.abs(best.year - year) ? item : best
@@ -680,15 +792,84 @@ function TrendPanel({ selectedMetric, year }) {
   );
 }
 
-function FoodRiver({ year }) {
+function UrbanRuralScene({ year, compareMode, setCompareMode }) {
+  const active = urbanRuralScenes[compareMode] || urbanRuralScenes.urban;
+  const scenes = [urbanRuralScenes.rural, urbanRuralScenes.urban];
+
+  return (
+    <section className="lens-section" aria-label="城乡双镜头">
+      <div className="lens-section__copy">
+        <span className="eyebrow">城乡双镜头</span>
+        <h3>同一年的中国餐桌，有两种不同的速度</h3>
+        <p>
+          数据的平均线会抹平差异。把城市和农村并排看，才能看见餐桌变化的两种路径：
+          一边是集市、菜园和粮袋，一边是超市、外卖和营养面板。
+        </p>
+      </div>
+      <div className="lens-grid">
+        {scenes.map((scene) => {
+          const key = scene === urbanRuralScenes.urban ? "urban" : "rural";
+          return (
+            <button
+              className={compareMode === key ? "scene-card scene-card--active" : "scene-card"}
+              key={scene.label}
+              type="button"
+              onClick={() => setCompareMode(key)}
+            >
+              <img src={assetPath(scene.image)} alt={`${scene.label}：${scene.material}`} />
+              <span className="scene-card__shade" />
+              <span className="scene-card__body">
+                <span className="scene-card__label">{scene.label}</span>
+                <strong>{scene.title}</strong>
+                <span>{scene.material}</span>
+              </span>
+              <span className="scene-card__stats">
+                {scene.stats.map(([label, value]) => (
+                  <span key={label}>
+                    <em>{label}</em>
+                    <b>{value}</b>
+                  </span>
+                ))}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <article className="lens-narrative">
+        <span>{year}年的阅读镜头</span>
+        <h4>{active.label}：{active.title}</h4>
+        <blockquote>{active.quote}</blockquote>
+        <p>{active.text}</p>
+      </article>
+    </section>
+  );
+}
+
+function ChartFrame({ id, className = "", children, note }) {
+  const narrative = chartNarratives[id];
+
+  return (
+    <article className={`chart-card ${className}`} style={{ "--chart-accent": narrative.color }}>
+      <div className="chart-card__head">
+        <span className="eyebrow">{narrative.kicker}</span>
+        <h3>{narrative.title}</h3>
+      </div>
+      <blockquote className="chart-quote">{narrative.quote}</blockquote>
+      <p className="chart-lede">{narrative.lede}</p>
+      <div className="chart-card__stage">{children}</div>
+      <div className="chart-card__foot">
+        <span>{narrative.action}</span>
+        {note && <p className="chart-card__note">{note}</p>}
+      </div>
+    </article>
+  );
+}
+
+function FoodRiver({ year, setYear }) {
   const riverKeys = ["grain", "vegetable", "meat", "fruit", "dairy", "aquatic"];
 
   return (
-    <article className="chart-card chart-card--wide">
-      <div className="chart-card__head">
-        <span className="eyebrow">结构河流图</span>
-        <h3>餐桌像一条河，主食变窄，奶果变宽</h3>
-      </div>
+    <ChartFrame id="river" className="chart-card--wide chart-card--river">
       <div className="river-chart" aria-label="食物结构河流图">
         {yearMarks.map((mark) => {
           const total = riverKeys.reduce((sum, key) => sum + getMetricValue(key, mark), 0);
@@ -697,6 +878,7 @@ function FoodRiver({ year }) {
               className={mark === year ? "river-column river-column--active" : "river-column"}
               key={mark}
               type="button"
+              onClick={() => setYear(mark)}
               aria-label={`${mark}年餐桌结构`}
             >
               <div className="river-stack">
@@ -716,8 +898,7 @@ function FoodRiver({ year }) {
           );
         })}
       </div>
-      <p>这张图故意不做传统折线，而把每一年压成一根“餐桌柱”。宽窄变化，比单独数值更容易看出结构迁移。</p>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -735,19 +916,25 @@ function SlopeChart() {
   const y = (value) => 230 - ((value - min) / (max - min || 1)) * 190;
 
   return (
-    <article className="chart-card">
-      <div className="chart-card__head">
-        <span className="eyebrow">坡度对比图</span>
-        <h3>一升一降，四十年最直观</h3>
-      </div>
+    <ChartFrame id="slope" className="chart-card--slope">
       <svg className="slope-chart" viewBox="0 0 360 260" role="img" aria-label="1985到2026食物消费坡度对比">
         <line x1="86" y1="28" x2="86" y2="238" stroke="rgba(53,55,47,.18)" />
         <line x1="274" y1="28" x2="274" y2="238" stroke="rgba(53,55,47,.18)" />
         <text x="68" y="18">1985</text>
         <text x="256" y="18">2026</text>
-        {rows.map((row) => (
+        {rows.map((row, index) => (
           <g key={row.key}>
-            <line x1="86" y1={y(row.start)} x2="274" y2={y(row.end)} stroke={row.color} strokeWidth="3" strokeLinecap="round" />
+            <line
+              className="slope-line"
+              x1="86"
+              y1={y(row.start)}
+              x2="274"
+              y2={y(row.end)}
+              stroke={row.color}
+              strokeWidth="3"
+              strokeLinecap="round"
+              style={{ "--delay": `${index * 110}ms` }}
+            />
             <circle cx="86" cy={y(row.start)} r="4" fill={row.color} />
             <circle cx="274" cy={y(row.end)} r="4" fill={row.color} />
             <text x="12" y={y(row.start) + 4}>{row.label}</text>
@@ -755,7 +942,7 @@ function SlopeChart() {
           </g>
         ))}
       </svg>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -769,14 +956,14 @@ function TakeoutFlow() {
   const max = Math.max(...points.map((point) => point.value));
 
   return (
-    <article className="chart-card">
-      <div className="chart-card__head">
-        <span className="eyebrow">外卖路径图</span>
-        <h3>晚饭从厨房分流到城市系统</h3>
-      </div>
+    <ChartFrame id="takeout" className="chart-card--flow">
       <div className="flow-route" aria-label="外卖路径图">
         {points.map((point, index) => (
-          <div className="flow-node" key={point.year} style={{ "--scale": point.value / max }}>
+          <div
+            className="flow-node"
+            key={point.year}
+            style={{ "--scale": point.value / max, "--delay": `${index * 120}ms` }}
+          >
             <span>{point.year}</span>
             <strong>{point.label}</strong>
             <em>{formatNumber(point.value, 0)}亿</em>
@@ -784,7 +971,7 @@ function TakeoutFlow() {
           </div>
         ))}
       </div>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -795,11 +982,7 @@ function MatrixHeatmap({ provinceData }) {
     .filter(Boolean);
 
   return (
-    <article className="chart-card chart-card--wide">
-      <div className="chart-card__head">
-        <span className="eyebrow">热力矩阵</span>
-        <h3>横看省份，纵看食物，地方差异会浮出来</h3>
-      </div>
+    <ChartFrame id="matrix" className="chart-card--wide chart-card--matrix">
       <div className="heatmap" role="img" aria-label="省份食物消费热力矩阵">
         <div className="heatmap__corner" />
         {provinces.map((province) => <strong key={province.province}>{province.province}</strong>)}
@@ -825,8 +1008,7 @@ function MatrixHeatmap({ provinceData }) {
           );
         })}
       </div>
-      <p>热力矩阵让“地方饮食差异”从地图之外再显影一次：哪个地方主食更重、哪个地方奶果更强，一眼可以扫出来。</p>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -837,11 +1019,12 @@ function RankingBars({ provinceData, field }) {
   const max = Math.max(1, ...rows.map((item) => provinceValue(item, field)));
 
   return (
-    <article className="chart-card">
-      <div className="chart-card__head">
-        <span className="eyebrow">排名条形图</span>
-        <h3>{field}最高的十个地方</h3>
-      </div>
+    <ChartFrame
+      id="ranking"
+      className="chart-card--ranking"
+      note={rows[0] ? `${field}排在最前面的是${rows[0].province}。这样的排名不是胜负，而是气候、物产、城市化和地方口味共同写下的一行脚注。` : ""}
+    >
+      <h4 className="chart-subtitle">{field}最高的十个地方</h4>
       <div className="ranking-bars" aria-label={`${field}省份排名`}>
         {rows.map((item, index) => (
           <div
@@ -859,12 +1042,7 @@ function RankingBars({ provinceData, field }) {
           </div>
         ))}
       </div>
-      {rows[0] && (
-        <p className="chart-card__note">
-          {rows[0].province}排在最前面。这样的排名不是胜负，而是气候、物产、城市化和地方口味共同写下的一行脚注。
-        </p>
-      )}
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -883,11 +1061,7 @@ function BubbleScatter({ provinceData }) {
   };
 
   return (
-    <article className="chart-card">
-      <div className="chart-card__head">
-        <span className="eyebrow">气泡散点图</span>
-        <h3>水果、水产与丰富度的关系</h3>
-      </div>
+    <ChartFrame id="scatter" className="chart-card--scatter">
       <svg className="bubble-scatter" viewBox="0 0 360 280" role="img" aria-label="省份水果水产与餐桌丰富度气泡图">
         <line x1="44" y1="230" x2="330" y2="230" stroke="rgba(53,55,47,.18)" />
         <line x1="44" y1="24" x2="44" y2="230" stroke="rgba(53,55,47,.18)" />
@@ -904,6 +1078,7 @@ function BubbleScatter({ provinceData }) {
           return (
             <g key={province.province}>
               <circle
+                className="scatter-dot"
                 cx={x}
                 cy={y}
                 r={r}
@@ -920,7 +1095,7 @@ function BubbleScatter({ provinceData }) {
           );
         })}
       </svg>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -931,16 +1106,13 @@ function BarcodeChart({ selectedMetric }) {
   const max = Math.max(...values);
 
   return (
-    <article className="chart-card chart-card--barcode">
-      <div className="chart-card__head">
-        <span className="eyebrow">时间条码</span>
-        <h3>{metric.label}的年代指纹</h3>
-      </div>
+    <ChartFrame id="barcode" className="chart-card--barcode">
+      <h4 className="chart-subtitle">{metric.label}的年代指纹</h4>
       <div className="barcode-chart" aria-label={`${metric.label}时间条码图`}>
-        {yearMarks.map((mark) => {
+        {yearMarks.map((mark, index) => {
           const ratio = (getMetricValue(selectedMetric, mark) - min) / (max - min || 1);
           return (
-            <div className="barcode-line" key={mark}>
+            <div className="barcode-line" key={mark} style={{ "--delay": `${index * 58}ms` }}>
               <i
                 style={{
                   height: `${28 + ratio * 168}px`,
@@ -952,7 +1124,7 @@ function BarcodeChart({ selectedMetric }) {
           );
         })}
       </div>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -960,11 +1132,7 @@ function SmallMultiples({ year, selectedMetric, setSelectedMetric }) {
   const keys = ["grain", "meat", "vegetable", "fruit", "dairy", "aquatic", "takeout"];
 
   return (
-    <article className="chart-card chart-card--wide chart-card--multiples">
-      <div className="chart-card__head">
-        <span className="eyebrow">小多图</span>
-        <h3>同一套时间轴，看七种食物的不同命运</h3>
-      </div>
+    <ChartFrame id="multiples" className="chart-card--wide chart-card--multiples">
       <div className="small-multiples" aria-label="七个指标小多图">
         {keys.map((key) => {
           const metric = metrics[key];
@@ -981,6 +1149,7 @@ function SmallMultiples({ year, selectedMetric, setSelectedMetric }) {
               <strong>{formatNumber(value)}</strong>
               <svg viewBox="0 0 158 46" aria-hidden="true">
                 <polyline
+                  className="mini-chart__line"
                   fill="none"
                   points={sparkPath(key, 158, 46)}
                   stroke={metric.color}
@@ -994,8 +1163,7 @@ function SmallMultiples({ year, selectedMetric, setSelectedMetric }) {
           );
         })}
       </div>
-      <p>小多图的价值在于“同时比较”：主食像慢慢退潮，水果和外卖像突然提速，水产和奶类则更像一条持续抬升的生活曲线。</p>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -1015,11 +1183,7 @@ function DumbbellChart({ selectedMetric, setSelectedMetric }) {
   const x = (value, rowMax) => 112 + (value / (rowMax || 1)) * 202;
 
   return (
-    <article className="chart-card">
-      <div className="chart-card__head">
-        <span className="eyebrow">哑铃图</span>
-        <h3>起点和终点之间，谁变化最大</h3>
-      </div>
+    <ChartFrame id="dumbbell" className="chart-card--dumbbell">
       <svg className="dumbbell-chart" viewBox="0 0 360 306" role="img" aria-label="1985或2015到2026哑铃对比图">
         <line x1="112" y1="28" x2="314" y2="28" stroke="rgba(53,55,47,.16)" />
         <text x="110" y="18">起点</text>
@@ -1037,9 +1201,10 @@ function DumbbellChart({ selectedMetric, setSelectedMetric }) {
               }}
               role="button"
               tabIndex="0"
+              style={{ "--delay": `${index * 75}ms` }}
             >
               <text x="8" y={y + 4}>{row.label}</text>
-              <line x1={x(row.start, rowMax)} y1={y} x2={x(row.end, rowMax)} y2={y} stroke={row.color} strokeWidth="4" strokeLinecap="round" />
+              <line className="dumbbell-line" x1={x(row.start, rowMax)} y1={y} x2={x(row.end, rowMax)} y2={y} stroke={row.color} strokeWidth="4" strokeLinecap="round" />
               <circle cx={x(row.start, rowMax)} cy={y} r="5" fill="#fffdf8" stroke={row.color} strokeWidth="2" />
               <circle cx={x(row.end, rowMax)} cy={y} r="7" fill={row.color} />
               <text x="318" y={y + 4}>{formatNumber(row.end)}</text>
@@ -1047,8 +1212,7 @@ function DumbbellChart({ selectedMetric, setSelectedMetric }) {
           );
         })}
       </svg>
-      <p>不同指标单位差异很大，这里按各自起终点归一化，强调变化方向和幅度。</p>
-    </article>
+    </ChartFrame>
   );
 }
 
@@ -1058,42 +1222,95 @@ function PlateMosaic({ year }) {
     .sort((a, b) => b.share - a.share);
 
   return (
-    <article className="chart-card chart-card--mosaic">
-      <div className="chart-card__head">
-        <span className="eyebrow">餐盘马赛克</span>
-        <h3>{year}年的一张拼贴餐盘</h3>
-      </div>
+    <ChartFrame id="mosaic" className="chart-card--mosaic">
+      <h4 className="chart-subtitle">{year}年的一张拼贴餐盘</h4>
       <div className="plate-mosaic" aria-label={`${year}年餐盘马赛克`}>
-        {segments.map((segment) => (
+        {segments.map((segment, index) => (
           <div
             className="mosaic-cell"
             key={segment.key}
-            style={{ "--accent": segment.color, gridColumn: `span ${segment.span}` }}
+            style={{ "--accent": segment.color, "--delay": `${index * 70}ms`, gridColumn: `span ${segment.span}` }}
           >
             <span>{segment.label}</span>
             <strong>{segment.share.toFixed(1)}%</strong>
           </div>
         ))}
       </div>
-    </article>
+    </ChartFrame>
   );
 }
 
-function ChartGallery({ year, provinceData, selectedMetric, setSelectedMetric }) {
+function ChartChapter({ number, title, text, children, className = "" }) {
+  return (
+    <section className={`chart-chapter ${className}`} aria-labelledby={`chart-chapter-${number}`}>
+      <div className="chart-chapter__copy">
+        <span>{number}</span>
+        <h3 id={`chart-chapter-${number}`}>{title}</h3>
+        <p>{text}</p>
+      </div>
+      <div className="chart-chapter__grid">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function ChartGallery({ year, setYear, provinceData, selectedMetric, setSelectedMetric }) {
   const rankField = metricProvinceField[selectedMetric] || "餐桌丰富度";
 
   return (
-    <section className="chart-gallery" aria-label="多样化图表章节">
-      <FoodRiver year={year} />
-      <SlopeChart />
-      <TakeoutFlow />
-      <MatrixHeatmap provinceData={provinceData} />
-      <RankingBars provinceData={provinceData} field={rankField} />
-      <BubbleScatter provinceData={provinceData} />
-      <BarcodeChart selectedMetric={selectedMetric} />
-      <SmallMultiples year={year} selectedMetric={selectedMetric} setSelectedMetric={setSelectedMetric} />
-      <DumbbellChart selectedMetric={selectedMetric} setSelectedMetric={setSelectedMetric} />
-      <PlateMosaic year={year} />
+    <section className="evidence-board" aria-label="多样化图表章节">
+      <div className="evidence-board__head">
+        <span className="eyebrow">02 多维证据链</span>
+        <h2>让每一种图表，只回答它最擅长的问题</h2>
+        <p>
+          结构用河流图看，速度用条码和路径看，地域用矩阵与散点看，个人阅读再回到餐盘。
+          不让读者用同一种眼睛看完整篇，也不让数据失去顺序。
+        </p>
+      </div>
+      <div className="evidence-rail" aria-hidden="true">
+        {["结构", "速度", "地理", "回到人"].map((item, index) => (
+          <span key={item} style={{ "--delay": `${index * 90}ms` }}>{item}</span>
+        ))}
+      </div>
+      <ChartChapter
+        number="01"
+        title="先看餐桌结构：哪些食物让出了位置，哪些食物进入日常"
+        text="这组图回答“吃什么变了”。河流图看比例迁移，坡度图看起终点方向，小多图把七种指标放在同一个节奏里。"
+        className="chart-chapter--structure"
+      >
+        <FoodRiver year={year} setYear={setYear} />
+        <SlopeChart />
+        <SmallMultiples year={year} selectedMetric={selectedMetric} setSelectedMetric={setSelectedMetric} />
+      </ChartChapter>
+      <ChartChapter
+        number="02"
+        title="再看变化速度：什么时候突然加速，什么时候慢下来"
+        text="外卖的出现不是线性增长，而像一次城市系统的接入。条码图则把单个指标切成年度切片，呈现阶段感。"
+        className="chart-chapter--speed"
+      >
+        <TakeoutFlow />
+        <BarcodeChart selectedMetric={selectedMetric} />
+      </ChartChapter>
+      <ChartChapter
+        number="03"
+        title="再把平均线拆开：地方餐桌有自己的方言"
+        text="同一指标在不同省份的差异，会被热力矩阵、排名条形图和散点气泡图分别照亮。它们不是重复，而是从三个角度看地域性。"
+        className="chart-chapter--geography"
+      >
+        <MatrixHeatmap provinceData={provinceData} />
+        <RankingBars provinceData={provinceData} field={rankField} />
+        <BubbleScatter provinceData={provinceData} />
+      </ChartChapter>
+      <ChartChapter
+        number="04"
+        title="最后回到一张餐盘：变化落在每一年、每个人的碗里"
+        text="哑铃图比较四十年的拉伸，马赛克把当前年份切成具体份额。数据走到这里，重新变回一顿饭。"
+        className="chart-chapter--portrait"
+      >
+        <DumbbellChart selectedMetric={selectedMetric} setSelectedMetric={setSelectedMetric} />
+        <PlateMosaic year={year} />
+      </ChartChapter>
     </section>
   );
 }
@@ -1430,6 +1647,7 @@ export function App() {
   }, []);
 
   const selected = metrics[selectedMetric];
+  const activeLens = urbanRuralScenes[compareMode] || urbanRuralScenes.urban;
   const chapter = useMemo(() => liuChapters.reduce((best, item) => (
     Math.abs(item.year - year) < Math.abs(best.year - year) ? item : best
   ), liuChapters[0]), [year]);
@@ -1507,6 +1725,7 @@ export function App() {
               <TrendPanel selectedMetric={selectedMetric} year={year} />
             </div>
             <WarmDataStory year={year} selectedMetric={selectedMetric} />
+            <UrbanRuralScene year={year} compareMode={compareMode} setCompareMode={setCompareMode} />
             <div className="stat-row">
               {[
                 ["恩格尔系数", "52.2% → 约29%", "从吃饭占大头，到生活选择更多"],
@@ -1523,10 +1742,11 @@ export function App() {
             </div>
             <div className="chart-intro">
               <span className="eyebrow">02 多维证据</span>
-              <p>从结构、地域、时间序列与新消费四条线索进入餐桌变化，让数据在不同尺度之间互相印证。</p>
+              <p>从结构、速度、地域与个人餐盘四条线进入餐桌变化，让数据在不同尺度之间互相印证。</p>
             </div>
             <ChartGallery
               year={year}
+              setYear={setYear}
               provinceData={provinceData}
               selectedMetric={selectedMetric}
               setSelectedMetric={setSelectedMetric}
@@ -1550,12 +1770,12 @@ export function App() {
                 农村
               </button>
             </div>
-            <h3>{compareMode === "urban" ? "城镇餐桌" : "农村餐桌"}的这一刻</h3>
-            <p>
-              {compareMode === "urban"
-                ? "城镇家庭更早接触超市、外食和外卖，食物选择变多，也更快被城市时间重塑。"
-                : "农村餐桌的主食基底更稳，蔬菜和本地物产仍是底色，肉奶果的增长改变了营养结构。"}
-            </p>
+            <div className="side-panel__photo">
+              <img src={assetPath(activeLens.image)} alt={`${activeLens.label}材料图`} />
+              <span>{activeLens.material}</span>
+            </div>
+            <h3>{activeLens.label}的这一刻</h3>
+            <p>{activeLens.text}</p>
             <div className="selected-metric" style={{ "--accent": selected.color }}>
               <span>{selected.label}</span>
               <strong>{formatNumber(getMetricValue(selectedMetric, year))}</strong>
@@ -1563,8 +1783,8 @@ export function App() {
               <small>{selected.story}</small>
             </div>
             <div className="quote-card">
-              <span>刘铁柱（化名）</span>
-              <p>“饭菜越来越多，可我最忘不了的，还是小时候父亲把碗里的肉夹给我们。”</p>
+              <span>{activeLens.label}旁白</span>
+              <p>{activeLens.quote}</p>
             </div>
           </aside>
         </section>
