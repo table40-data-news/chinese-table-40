@@ -696,17 +696,6 @@ function TimeSlider({ year, setYear }) {
         </div>
       </div>
       <div className="range-wrap">
-        <input
-          aria-label="拖动查看年份"
-          type="range"
-          min="1985"
-          max="2026"
-          value={year}
-          onChange={(event) => {
-            setIsPlaying(false);
-            setYear(nearestYear(Number(event.target.value)));
-          }}
-        />
         <div className="ticks" role="group" aria-label="年份节点">
           {yearMarks.map((mark) => (
             <button
@@ -767,11 +756,6 @@ function TimeSlider({ year, setYear }) {
             alt=""
             style={{ left: `${yearProgress(year)}%` }}
           />
-        </div>
-        <div className="control-cues" aria-label="互动提示">
-          <span>拖动小人</span>
-          <span>点击年份</span>
-          <span>图表联动</span>
         </div>
       </div>
       <p className="control-note">主数据至2024；2026为趋势延伸与叙事观察节点。</p>
@@ -1401,7 +1385,7 @@ function ChartGallery({ year, setYear, provinceData, selectedMetric, setSelected
   const rankField = metricProvinceField[selectedMetric] || "餐桌丰富度";
 
   return (
-    <section className="evidence-board" aria-label="多样化图表章节">
+    <section className="evidence-board" id="evidence" aria-label="多样化图表章节">
       <div className="evidence-board__head">
         <span className="eyebrow">02 多维证据链</span>
         <h2>让每一种图表，只回答它最擅长的问题</h2>
@@ -1409,11 +1393,6 @@ function ChartGallery({ year, setYear, provinceData, selectedMetric, setSelected
           结构用河流图看，速度用条码和路径看，地域用矩阵与散点看，个人阅读再回到餐盘。
           不让读者用同一种眼睛看完整篇，也不让数据失去顺序。
         </p>
-      </div>
-      <div className="evidence-rail" aria-hidden="true">
-        {["结构", "速度", "地理", "回到人"].map((item, index) => (
-          <span key={item} style={{ "--delay": `${index * 90}ms` }}>{item}</span>
-        ))}
       </div>
       <ChartChapter
         number="01"
@@ -1788,8 +1767,6 @@ export function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const selected = metrics[selectedMetric];
-  const activeLens = urbanRuralScenes[compareMode] || urbanRuralScenes.urban;
   const chapter = useMemo(() => liuChapters.reduce((best, item) => (
     Math.abs(item.year - year) < Math.abs(best.year - year) ? item : best
   ), liuChapters[0]), [year]);
@@ -1837,19 +1814,19 @@ export function App() {
 
         <section className="story-shell" id="theatre">
           <aside className="chapter-nav" aria-label="章节导航">
-            <span>章节导航</span>
+            <span>阅读索引</span>
             {[
-              ["01", "餐桌结构"],
-              ["02", "指标趋势"],
-              ["03", "刘铁柱"],
-              ["04", "地区差异"],
-              ["05", "数据说明"],
-            ].map(([num, label]) => (
-              <a key={num} href={num === "03" ? "#liu" : num === "04" ? "#regions" : num === "05" ? "#sources" : "#theatre"}>
+              ["01", "餐桌结构", "#theatre"],
+              ["02", "多维证据", "#evidence"],
+              ["03", "刘铁柱", "#liu"],
+              ["04", "地区差异", "#regions"],
+              ["05", "数据说明", "#sources"],
+            ].map(([num, label, href]) => (
+              <a key={num} href={href}>
                 <strong>{num}</strong>{label}
               </a>
             ))}
-            <button type="button" onClick={() => setDrawerOpen(true)}>查看数据与方法</button>
+            <button type="button" onClick={() => setDrawerOpen(true)}>数据与方法</button>
           </aside>
 
           <section className="theatre-panel">
@@ -1882,10 +1859,6 @@ export function App() {
                 </article>
               ))}
             </div>
-            <div className="chart-intro">
-              <span className="eyebrow">02 多维证据</span>
-              <p>从结构、速度、地域与个人餐盘四条线进入餐桌变化，让数据在不同尺度之间互相印证。</p>
-            </div>
             <ChartGallery
               year={year}
               setYear={setYear}
@@ -1895,40 +1868,6 @@ export function App() {
             />
           </section>
 
-          <aside className="side-panel">
-            <div className="compare-switch" aria-label="城乡对比">
-              <button
-                className={compareMode === "urban" ? "active" : ""}
-                type="button"
-                onClick={() => setCompareMode("urban")}
-              >
-                城镇
-              </button>
-              <button
-                className={compareMode === "rural" ? "active" : ""}
-                type="button"
-                onClick={() => setCompareMode("rural")}
-              >
-                农村
-              </button>
-            </div>
-            <div className="side-panel__photo">
-              <img src={assetPath(activeLens.image)} alt={`${activeLens.label}材料图`} />
-              <span>{activeLens.material}</span>
-            </div>
-            <h3>{activeLens.label}的这一刻</h3>
-            <p>{activeLens.text}</p>
-            <div className="selected-metric" style={{ "--accent": selected.color }}>
-              <span>{selected.label}</span>
-              <strong>{formatNumber(getMetricValue(selectedMetric, year))}</strong>
-              <em>{selected.unit}</em>
-              <small>{selected.story}</small>
-            </div>
-            <div className="quote-card">
-              <span>{activeLens.label}旁白</span>
-              <p>{activeLens.quote}</p>
-            </div>
-          </aside>
         </section>
 
         <LiuStory year={year} setYear={setYear} />
