@@ -648,23 +648,51 @@ function WarmDataStory({ year, selectedMetric }) {
 }
 
 function TimeSlider({ year, setYear }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const trackRef = useRef(null);
+  const draggingRef = useRef(false);
+
+  useEffect(() => {
+    if (!isPlaying) return undefined;
+    const timer = window.setInterval(() => {
+      setYear((currentYear) => {
+        const current = yearMarks.indexOf(currentYear);
+        return yearMarks[(current + 1) % yearMarks.length];
+      });
+    }, 1350);
+    return () => window.clearInterval(timer);
+  }, [isPlaying, setYear]);
+
+  const setYearFromPointer = (clientX) => {
+    if (!trackRef.current) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    setYear(nearestYear(1985 + ratio * (2026 - 1985)));
+  };
+
+  const moveYearBy = (direction) => {
+    const current = yearMarks.indexOf(year);
+    const next = Math.min(yearMarks.length - 1, Math.max(0, current + direction));
+    setIsPlaying(false);
+    setYear(yearMarks[next]);
+  };
+
   return (
     <section className="control-deck" aria-label="餐桌年份控制台">
       <div className="control-play">
         <button
-          className="round-button"
+          className={isPlaying ? "round-button round-button--playing" : "round-button"}
           type="button"
-          onClick={() => {
-            const current = yearMarks.indexOf(year);
-            setYear(yearMarks[(current + 1) % yearMarks.length]);
-          }}
-          aria-label="播放下一段年份"
+          onClick={() => setIsPlaying((current) => !current)}
+          aria-label={isPlaying ? "暂停自动播放时间线" : "自动播放时间线"}
         >
-          ▶
+          {isPlaying ? "Ⅱ" : "▶"}
         </button>
         <div>
           <span>时间轴</span>
           <strong>{year}</strong>
+          <em>{isPlaying ? "正在自动播放餐桌变化" : "拖动小人，图表会跟着变"}</em>
         </div>
       </div>
       <div className="range-wrap">
@@ -674,28 +702,76 @@ function TimeSlider({ year, setYear }) {
           min="1985"
           max="2026"
           value={year}
-          onChange={(event) => setYear(nearestYear(Number(event.target.value)))}
+          onChange={(event) => {
+            setIsPlaying(false);
+            setYear(nearestYear(Number(event.target.value)));
+          }}
         />
-        <div className="ticks" aria-hidden="true">
+        <div className="ticks" role="group" aria-label="年份节点">
           {yearMarks.map((mark) => (
             <button
               className={mark === year ? "tick tick--active" : "tick"}
               key={mark}
               type="button"
-              onClick={() => setYear(mark)}
+              onClick={() => {
+                setIsPlaying(false);
+                setYear(mark);
+              }}
             >
               {mark}
             </button>
           ))}
         </div>
-        <div className="walker-track" aria-hidden="true">
+        <div
+          className={dragging ? "walker-track walker-track--dragging" : "walker-track"}
+          ref={trackRef}
+          role="slider"
+          tabIndex="0"
+          aria-label="拖动刘铁柱查看年份"
+          aria-valuemin="1985"
+          aria-valuemax="2026"
+          aria-valuenow={year}
+          onPointerDown={(event) => {
+            event.preventDefault();
+            setIsPlaying(false);
+            draggingRef.current = true;
+            setDragging(true);
+            setYearFromPointer(event.clientX);
+            event.currentTarget.setPointerCapture?.(event.pointerId);
+          }}
+          onPointerMove={(event) => {
+            if (draggingRef.current) setYearFromPointer(event.clientX);
+          }}
+          onPointerUp={(event) => {
+            draggingRef.current = false;
+            setDragging(false);
+            event.currentTarget.releasePointerCapture?.(event.pointerId);
+          }}
+          onPointerCancel={(event) => {
+            draggingRef.current = false;
+            setDragging(false);
+            event.currentTarget.releasePointerCapture?.(event.pointerId);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft") moveYearBy(-1);
+            if (event.key === "ArrowRight") moveYearBy(1);
+          }}
+        >
           <span className="walker-track__line" />
+          <span className="walker-hint" style={{ left: `${Math.min(92, Math.max(8, yearProgress(year)))}%` }}>
+            拖动小人
+          </span>
           <img
             className="walker-track__person"
             src={assetPath("/assets/characters/liu-tiezhu.png")}
             alt=""
             style={{ left: `${yearProgress(year)}%` }}
           />
+        </div>
+        <div className="control-cues" aria-label="互动提示">
+          <span>拖动小人</span>
+          <span>点击年份</span>
+          <span>图表联动</span>
         </div>
       </div>
       <p className="control-note">主数据至2024；2026为趋势延伸与叙事观察节点。</p>
@@ -732,7 +808,7 @@ function PlateTheatre({ year }) {
 
   return (
     <div className="plate-stage">
-      <div className="plate" style={{ background: `conic-gradient(${gradient})` }}>
+      <div className="plate" key={year} style={{ background: `conic-gradient(${gradient})` }}>
         <div className="plate-core">
           <strong>{year}</strong>
           <span>餐桌结构</span>
@@ -1158,7 +1234,7 @@ function BubbleScatter({ provinceData }) {
   );
 }
 
-function BarcodeChart({ selectedMetric }) {
+function BarcodeChart({ selectedMetric, year, setYear }) {
   const metric = metrics[selectedMetric];
   const values = yearMarks.map((year) => getMetricValue(selectedMetric, year));
   const min = Math.min(...values);
@@ -1167,11 +1243,18 @@ function BarcodeChart({ selectedMetric }) {
   return (
     <ChartFrame id="barcode" className="chart-card--barcode">
       <h4 className="chart-subtitle">{metric.label}的年代指纹</h4>
-      <div className="barcode-chart" aria-label={`${metric.label}时间条码图`}>
+      <div className="barcode-chart" key={`${selectedMetric}-${year}`} aria-label={`${metric.label}时间条码图`}>
         {yearMarks.map((mark, index) => {
           const ratio = (getMetricValue(selectedMetric, mark) - min) / (max - min || 1);
           return (
-            <div className="barcode-line" key={mark} style={{ "--delay": `${index * 58}ms` }}>
+            <button
+              className={mark === year ? "barcode-line barcode-line--active" : "barcode-line"}
+              key={mark}
+              type="button"
+              onClick={() => setYear(mark)}
+              style={{ "--delay": `${index * 58}ms`, "--bar-accent": metric.color }}
+              aria-label={`切换到${mark}年，${metric.label}${formatNumber(getMetricValue(selectedMetric, mark))}${metric.unit}`}
+            >
               <i
                 style={{
                   height: `${28 + ratio * 168}px`,
@@ -1179,7 +1262,7 @@ function BarcodeChart({ selectedMetric }) {
                 }}
               />
               <span>{mark}</span>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -1283,7 +1366,7 @@ function PlateMosaic({ year }) {
   return (
     <ChartFrame id="mosaic" className="chart-card--mosaic">
       <h4 className="chart-subtitle">{year}年的一张拼贴餐盘</h4>
-      <div className="plate-mosaic" aria-label={`${year}年餐盘马赛克`}>
+      <div className="plate-mosaic" key={year} aria-label={`${year}年餐盘马赛克`}>
         {segments.map((segment, index) => (
           <div
             className="mosaic-cell"
@@ -1349,7 +1432,7 @@ function ChartGallery({ year, setYear, provinceData, selectedMetric, setSelected
         className="chart-chapter--speed"
       >
         <TakeoutFlow />
-        <BarcodeChart selectedMetric={selectedMetric} />
+        <BarcodeChart selectedMetric={selectedMetric} year={year} setYear={setYear} />
       </ChartChapter>
       <ChartChapter
         number="03"
