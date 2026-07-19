@@ -1455,7 +1455,6 @@ function ChartGallery({ year, setYear, provinceData, selectedMetric, setSelected
     <section className="evidence-board" id="evidence" aria-label="多样化图表章节">
       <div className="evidence-board__head">
         <span className="eyebrow">02 多维证据链</span>
-        <h2>让每一种图表，只回答它最擅长的问题</h2>
         <p>
           结构用河流图看，速度用条码和路径看，地域用矩阵与散点看，个人阅读再回到餐盘。
           不让读者用同一种眼睛看完整篇，也不让数据失去顺序。
