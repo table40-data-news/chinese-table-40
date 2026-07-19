@@ -17,6 +17,19 @@ const palette = {
   takeout: "#2f756f",
 };
 
+const mealMessages = [
+  "好好吃饭",
+  "今晚回家吃饭",
+  "记得吃一口热乎的",
+  "把好吃的留给家人",
+  "慢慢吃，认真生活",
+  "一蔬一饭，都是日子",
+  "这一口，是家的味道",
+  "别让忙碌替你做晚餐",
+  "吃饱，也吃得更好",
+  "刘铁柱，开饭了",
+];
+
 const metrics = {
   grain: {
     label: "主食",
@@ -597,6 +610,60 @@ function MusicToggle() {
         <em>轻柔餐桌氛围</em>
       </span>
     </button>
+  );
+}
+
+function MealDanmaku() {
+  const [enabled, setEnabled] = useState(() => {
+    try {
+      return window.localStorage.getItem("table40-danmaku") !== "off";
+    } catch {
+      return true;
+    }
+  });
+
+  const toggle = () => {
+    setEnabled((value) => {
+      const next = !value;
+      try {
+        window.localStorage.setItem("table40-danmaku", next ? "on" : "off");
+      } catch {
+        // The visual toggle still works when storage is unavailable.
+      }
+      return next;
+    });
+  };
+
+  return (
+    <>
+      {enabled && (
+        <div className="meal-danmaku" aria-hidden="true">
+          {mealMessages.map((message, index) => (
+            <span
+              className="meal-danmaku__item"
+              key={message}
+              style={{
+                "--lane": index % 5,
+                "--duration": `${21 + (index % 4) * 4}s`,
+                "--delay": `${-3 - index * 3.7}s`,
+                "--tone": ["#b83d2e", "#2f756f", "#b88928", "#3b738c"][index % 4],
+              }}
+            >
+              {message}
+            </span>
+          ))}
+        </div>
+      )}
+      <button
+        className={enabled ? "danmaku-toggle danmaku-toggle--on" : "danmaku-toggle"}
+        type="button"
+        aria-pressed={enabled}
+        onClick={toggle}
+      >
+        <span aria-hidden="true"><i /></span>
+        <strong>饭桌弹幕</strong>
+      </button>
+    </>
   );
 }
 
@@ -1436,6 +1503,28 @@ function ChartGallery({ year, setYear, provinceData, selectedMetric, setSelected
   );
 }
 
+function MemoryInterlude() {
+  return (
+    <section className="memory-interlude" id="table-memory" aria-labelledby="memory-interlude-title">
+      <img
+        src={assetPath("/assets/eras/era-1980.png")}
+        alt="旧日饭桌上的白瓷碗、粮袋与饭菜"
+      />
+      <div className="memory-interlude__shade" aria-hidden="true" />
+      <div className="memory-interlude__steam" aria-hidden="true"><i /><i /><i /></div>
+      <div className="memory-interlude__copy">
+        <span>饭桌记忆</span>
+        <h2 id="memory-interlude-title">“饭好了，趁热吃。”</h2>
+        <p>
+          曲线记录的是克数、比例和年份。可在许多人的记忆里，时代最先变成的声音，
+          是母亲从厨房探出身子，喊散在屋里的人回来吃饭。
+        </p>
+        <strong>一顿热饭，把宏大的变化叫回了家。</strong>
+      </div>
+    </section>
+  );
+}
+
 function LiuStory({ year, setYear }) {
   const chapter = liuChapters.reduce((best, item) => (
     Math.abs(item.year - year) < Math.abs(best.year - year) ? item : best
@@ -1780,6 +1869,7 @@ export function App() {
         id="top"
         style={{ "--hero-image": `url("${assetPath("/assets/table40-hero-v2.png")}")` }}
       >
+        <MealDanmaku />
         <nav className="top-nav" aria-label="页面章节">
           <a href="#theatre">时代餐桌</a>
           <a href="#liu">刘铁柱</a>
@@ -1869,6 +1959,8 @@ export function App() {
           </section>
 
         </section>
+
+        <MemoryInterlude />
 
         <LiuStory year={year} setYear={setYear} />
 
