@@ -1582,6 +1582,12 @@ main {
   grid-column: 1 / -1;
 }
 
+.chart-card--slope {
+  width: min(100%, 880px);
+  min-height: 0;
+  justify-self: center;
+}
+
 .chart-card__head h3 {
   margin: 6px 0 11px;
   font-family: "Noto Serif SC", "Songti SC", serif;
@@ -1733,33 +1739,106 @@ main {
   pointer-events: none;
 }
 
-.slope-chart {
+.slope-plot {
+  position: relative;
+  width: min(100%, 760px);
+  height: 220px;
+  margin: 6px auto 0;
+}
+
+.slope-plot > svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  min-height: 250px;
+  height: 100%;
   overflow: visible;
 }
 
-.slope-chart text {
-  fill: var(--ink-2);
-  font-size: 12px;
-  font-weight: 800;
+.slope-axis {
+  stroke: rgba(53, 55, 47, 0.16);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
 
-.slope-label {
-  paint-order: stroke;
-  stroke: rgba(255, 253, 248, 0.92);
-  stroke-width: 5px;
-  stroke-linejoin: round;
+.slope-plot__year,
+.slope-plot__unit {
+  position: absolute;
+  top: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
 }
 
-.slope-label--right {
+.slope-plot__year--start {
+  left: 27%;
+  transform: translateX(-50%);
+}
+
+.slope-plot__year--end {
+  left: 73%;
+  transform: translateX(-50%);
+}
+
+.slope-plot__unit {
+  right: 0;
+  font-weight: 700;
+}
+
+.slope-plot__label {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 21%;
+  transform: translateY(-50%);
+  color: var(--ink-2);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.slope-plot__label strong {
+  font-size: 13px;
+}
+
+.slope-plot__label em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
   font-variant-numeric: tabular-nums;
+}
+
+.slope-plot__label--start {
+  left: 0;
+}
+
+.slope-plot__label--end {
+  right: 0;
+  justify-content: flex-end;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.slope-plot__dot {
+  position: absolute;
+  z-index: 3;
+  width: 8px;
+  height: 8px;
+  border: 2px solid rgba(255, 253, 248, 0.94);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(53, 55, 47, 0.16);
+  transform: translate(-50%, -50%);
 }
 
 .slope-label-guide {
   stroke: rgba(53, 55, 47, 0.18);
   stroke-width: 1;
   stroke-dasharray: 3 4;
+}
+
+.slope-plot .slope-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
 }
 
 .sparkline polyline,
@@ -3269,6 +3348,32 @@ main {
   .lens-narrative blockquote,
   .lens-narrative p {
     grid-column: auto;
+  }
+
+  .chart-card--slope {
+    width: 100%;
+  }
+
+  .slope-plot {
+    height: 205px;
+  }
+
+  .slope-plot__label {
+    display: grid;
+    gap: 2px;
+    width: 23%;
+  }
+
+  .slope-plot__label--end {
+    justify-items: end;
+  }
+
+  .slope-plot__label strong {
+    font-size: 12px;
+  }
+
+  .slope-plot__label em {
+    font-size: 10px;
   }
 
   .small-multiples {

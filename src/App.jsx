@@ -976,7 +976,7 @@ function ChartFrame({ id, className = "", children, note }) {
   const narrative = chartNarratives[id];
 
   return (
-    <article className={`chart-card ${className}`} style={{ "--chart-accent": narrative.color }}>
+    <article id={`chart-${id}`} className={`chart-card ${className}`} style={{ "--chart-accent": narrative.color }}>
       <div className="chart-card__head">
         <span className="eyebrow">{narrative.kicker}</span>
         <h3>{narrative.title}</h3>
@@ -1040,11 +1040,11 @@ function SlopeChart() {
   const values = rows.flatMap((row) => [row.start, row.end]);
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const y = (value) => 230 - ((value - min) / (max - min || 1)) * 190;
+  const y = (value) => 88 - ((value - min) / (max - min || 1)) * 76;
   const distributeLabels = (items, valueKey) => {
-    const minY = 36;
-    const maxY = 224;
-    const minGap = 22;
+    const minY = 12;
+    const maxY = 88;
+    const minGap = 16;
     const sorted = items
       .map((row) => ({ key: row.key, rawY: y(row[valueKey]) }))
       .sort((a, b) => a.rawY - b.rawY);
@@ -1089,45 +1089,59 @@ function SlopeChart() {
 
   return (
     <ChartFrame id="slope" className="chart-card--slope">
-      <svg className="slope-chart" viewBox="0 0 360 260" role="img" aria-label="1985到2026食物消费坡度对比">
-        <line x1="86" y1="28" x2="86" y2="238" stroke="rgba(53,55,47,.18)" />
-        <line x1="274" y1="28" x2="274" y2="238" stroke="rgba(53,55,47,.18)" />
-        <text x="68" y="18">1985</text>
-        <text x="256" y="18">2026</text>
+      <div className="slope-plot" role="img" aria-label="1985到2026食物消费坡度对比">
+        <span className="slope-plot__year slope-plot__year--start">1985</span>
+        <span className="slope-plot__year slope-plot__year--end">2026</span>
+        <span className="slope-plot__unit">kg/人/年</span>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <line className="slope-axis" x1="27" y1="8" x2="27" y2="92" />
+          <line className="slope-axis" x1="73" y1="8" x2="73" y2="92" />
         {rows.map((row, index) => (
           <g key={row.key}>
             <line
               className="slope-line"
-              x1="86"
+              x1="27"
               y1={y(row.start)}
-              x2="274"
+              x2="73"
               y2={y(row.end)}
               stroke={row.color}
-              strokeWidth="3"
+              strokeWidth="2.4"
               strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
               style={{ "--delay": `${index * 110}ms` }}
             />
             <line
               className="slope-label-guide"
-              x1="56"
+              x1="22"
               y1={startLabelY[row.key]}
-              x2="82"
+              x2="26.5"
               y2={y(row.start)}
+              vectorEffect="non-scaling-stroke"
             />
             <line
               className="slope-label-guide"
-              x1="278"
+              x1="73.5"
               y1={y(row.end)}
-              x2="292"
+              x2="78"
               y2={endLabelY[row.key]}
+              vectorEffect="non-scaling-stroke"
             />
-            <circle cx="86" cy={y(row.start)} r="4" fill={row.color} />
-            <circle cx="274" cy={y(row.end)} r="4" fill={row.color} />
-            <text className="slope-label slope-label--left" x="12" y={startLabelY[row.key]} dominantBaseline="middle">{row.label}</text>
-            <text className="slope-label slope-label--right" x="294" y={endLabelY[row.key]} dominantBaseline="middle">{formatNumber(row.end)}</text>
           </g>
         ))}
-      </svg>
+        </svg>
+        {rows.map((row) => (
+          <div key={`${row.key}-labels`}>
+            <span className="slope-plot__label slope-plot__label--start" style={{ top: `${startLabelY[row.key]}%` }}>
+              <strong>{row.label}</strong><em>{formatNumber(row.start)}</em>
+            </span>
+            <span className="slope-plot__label slope-plot__label--end" style={{ top: `${endLabelY[row.key]}%` }}>
+              <strong>{formatNumber(row.end)}</strong>
+            </span>
+            <i className="slope-plot__dot" style={{ left: "27%", top: `${y(row.start)}%`, background: row.color }} />
+            <i className="slope-plot__dot" style={{ left: "73%", top: `${y(row.end)}%`, background: row.color }} />
+          </div>
+        ))}
+      </div>
     </ChartFrame>
   );
 }
